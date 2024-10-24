@@ -239,8 +239,8 @@ def duplicate_checker(df):
 # Distribution checker
 
 def distribution_checker (data, xlabel):
-  grouped = data.groupby([xlabel, 'status_group'])['id'].count().reset_index()
-  pivot = grouped.pivot_table(index = xlabel, columns = 'status_group', fill_value = 0)
+  grouped = data.groupby([xlabel, 'target'])['id'].count().reset_index()
+  pivot = grouped.pivot_table(index = xlabel, columns = 'target', fill_value = 0)
   mi=pivot.columns
   mi.tolist()
   ind = pd.Index([ str(e[1])  for e in mi.tolist()])

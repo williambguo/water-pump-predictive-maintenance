@@ -1,3 +1,8 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 # Function for creating a descriptive stats report for numerical data
 
 def numerical_dqr(df):
@@ -94,8 +99,8 @@ def categorical_dqr(df):
   # Count
   count_values = pd.DataFrame(
       columns=['Records'])
-  for row in list(raw[categorical].columns.values):
-    count_values.loc[row] = [raw[categorical][row].count()]
+  for row in list(df[categorical].columns.values):
+    count_values.loc[row] = [df[categorical][row].count()]
   
   # Missing data
   missing_data = pd.DataFrame(
@@ -105,22 +110,22 @@ def categorical_dqr(df):
   # Unique values
   unique_values = pd.DataFrame(
       columns=['Unique Values'])
-  for row in list(raw[categorical].columns.values):
-    unique_values.loc[row] = [raw[categorical][row].nunique()]
+  for row in list(df[categorical].columns.values):
+    unique_values.loc[row] = [df[categorical][row].nunique()]
 
   # Mode
   mode_values = pd.DataFrame(
       columns=['Mode'])
-  for row in list(raw[categorical].columns.values): 
-    mode_values.loc[row] = [raw[categorical][row].mode()[0]]
+  for row in list(df[categorical].columns.values): 
+    mode_values.loc[row] = [df[categorical][row].mode()[0]]
     mode = mode_values.loc[row]
   
   # Mode frequency
   listModeFreq = []
   for row in categorical:
-    mode = raw[row].mode().iat[0]
-    ModeFreq = raw[row].value_counts()[mode]
-    #print(x, mode, raw[x].value_counts()[mode])
+    mode = df[row].mode().iat[0]
+    ModeFreq = df[row].value_counts()[mode]
+    #print(x, mode, df[x].value_counts()[mode])
     listModeFreq .append(ModeFreq )
   listModeFreq  = np.array(listModeFreq )
     
@@ -129,7 +134,7 @@ def categorical_dqr(df):
   dq_report_cat = data_types.join(missing_data).join(count_values).join(unique_values).join(mode_values)
   dq_report_cat['Mode freq.'] = listModeFreq 
   dq_report_cat['Mode %'] = (dq_report_cat['Mode freq.'] / dq_report_cat['Records']*100) .astype('float')
-  dq_report_cat['Missing %'] = (dq_report_cat['Missing Values'] / len(raw[categorical]) *100)
+  dq_report_cat['Missing %'] = (dq_report_cat['Missing Values'] / len(df[categorical]) *100)
 
   # Change order of columns
   dq_report_cat = dq_report_cat[['Data Type', 'Records', 'Unique Values', 'Missing Values', 'Missing %', 'Mode', 'Mode freq.', 'Mode %']]

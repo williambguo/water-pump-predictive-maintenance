@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from skrub import SimilarityEncoder
 
 # Function for creating a descriptive stats report for numerical data
-
 def numerical_dqr(df):
   
   # Select numerical columns
@@ -85,7 +85,6 @@ def numerical_dqr(df):
 
 
 # Custom function for creating a descriptive stats report for categorical data
-
 def categorical_dqr(df):
 
   # Select categorical columns
@@ -145,7 +144,6 @@ def categorical_dqr(df):
 
 
 # Function for creating a descriptive stats report for datetime data
-
 def datetime_dqr(df):
   
   # Select numerical columns
@@ -228,7 +226,6 @@ def datetime_dqr(df):
 
 
 # Duplicate checker
-
 def duplicate_checker(df):
   duplicates = df.duplicated(keep = 'first').sum()
   print("Number of duplicates: {}".format(duplicates))
@@ -237,7 +234,6 @@ def duplicate_checker(df):
 
 
 # Distribution checker
-
 def distribution_checker (data, xlabel):
   grouped = data.groupby([xlabel, 'target'])['id'].count().reset_index()
   pivot = grouped.pivot_table(index = xlabel, columns = 'target', fill_value = 0)
@@ -255,6 +251,7 @@ def distribution_checker (data, xlabel):
   return(pivot)
 
 
+# Kernel density plot
 def kdeplotter (dataset, feature, rows, columns):
   fig, axes = plt.subplots(nrows=rows,ncols=columns, figsize = (30,12))
   plot = 0
@@ -264,6 +261,7 @@ def kdeplotter (dataset, feature, rows, columns):
        plot +=1
 
 
+# Countplot
 def countplotter (dataset, feature, rows, columns):
     fig, axes = plt.subplots(nrows=rows,ncols=columns, figsize = (30,50))
     plot = 0
@@ -274,3 +272,30 @@ def countplotter (dataset, feature, rows, columns):
              ax.set_xlabel("")
              ax.set_xticklabels(ax.get_xticklabels(), rotation = 70, fontsize=9)
              plot +=1
+
+
+# Correlation matrix plotter
+def plot_similarity(labels, features):
+  
+    normalized_features = normalize(features)
+    
+    # Create correlation matrix
+    corr = np.inner(normalized_features, normalized_features)
+    
+    # Plot
+    mask = np.triu(np.ones_like(corr, dtype=bool))
+    fig, ax = plt.subplots(figsize=(30,30)) 
+    ax = sns.heatmap(corr, mask=mask, cmap= "RdYlGn", vmin=0, linewidths=1, annot=True, fmt=".2f", xticklabels=labels, annot_kws={"size": 9})
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
+    ax.set_yticklabels(ax.get_xticklabels(), rotation=0)
+    plt.show()
+
+
+# Similarity plotter
+def encode_and_plot(labels):
+    # Encode
+    enc = SimilarityEncoder(similarity="ngram") 
+    X_enc = enc.fit_transform(labels.reshape(-1, 1))
+    # Plot
+    plot_similarity(labels, X_enc)
+

@@ -22,7 +22,7 @@ Data preprocessing is a critical step in any ML classification analysis. This da
 *Missing data visualized*:
 ![image](https://github.com/user-attachments/assets/455ffdf3-5e2d-4a52-a1f1-57418fb5ea10)
 
-In [training_data_preprocessing.ipynb](./training_data_preprocessing.ipynb), several data cleaning and transformation techniques are applied:
+In [training_data_preprocessing.ipynb](../notebooks/training_data_preprocessing.ipynb), several data cleaning and transformation techniques are applied:
 - Imputing missing values
 - Encoding categorical features
 - Solving target variable class imbalance problem
